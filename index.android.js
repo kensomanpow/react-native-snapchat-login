@@ -11,7 +11,6 @@ class SnapchatLogin {
   login = () => {
     return new Promise((resolve, reject) => {
       const succeededListener = this.addListener('LoginSucceeded', res => {
-        console.log('TCL: SnapchatLogin -> succeededListener -> res', res)
         succeededListener.remove()
         failedListener.remove()
         this.getUserInfo()
@@ -19,7 +18,6 @@ class SnapchatLogin {
           .catch(reject)
       })
       const failedListener = this.addListener('LoginFailed', res => {
-        console.log('TCL: SnapchatLogin -> failedListener -> res', res)
         succeededListener.remove()
         failedListener.remove()
         resolve(false)
