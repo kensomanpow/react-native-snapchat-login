@@ -8,7 +8,7 @@ import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.snapchat.kit.sdk.SnapLogin;
 import com.snapchat.kit.sdk.core.controller.LoginStateController;
@@ -17,25 +17,23 @@ import com.snapchat.kit.sdk.login.models.MeData;
 import com.snapchat.kit.sdk.login.models.UserDataResponse;
 
 public class SnapchatLoginModule extends ReactContextBaseJavaModule {
-
     private final ReactApplicationContext reactContext;
-    private final LoginStateController.OnLoginStateChangedListener mLoginStateChangedListener =
-            new LoginStateController.OnLoginStateChangedListener() {
-                @Override
-                public void onLoginSucceeded() {
-                    sendEvent("LoginSucceeded", null);
-                }
+    final LoginStateController.OnLoginStateChangedListener mLoginStateChangedListener = new LoginStateController.OnLoginStateChangedListener() {
+        @Override
+        public void onLoginSucceeded() {
+            sendEvent("LoginSucceeded", null);
+        }
 
-                @Override
-                public void onLoginFailed() {
-                    sendEvent("LoginFailed", null);
-                }
+        @Override
+        public void onLoginFailed() {
+            sendEvent("LoginFailed", null);
+        }
 
-                @Override
-                public void onLogout() {
-                    sendEvent("LogOut", null);
-                }
-            };
+        @Override
+        public void onLogout() {
+            sendEvent("LogOut", null);
+        }
+    };
 
     public SnapchatLoginModule(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -54,11 +52,12 @@ public class SnapchatLoginModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void login(final Promise promise) {
         try {
-            SnapLogin.getLoginStateController(getReactApplicationContext()).addOnLoginStateChangedListener(this.mLoginStateChangedListener);
+            SnapLogin.getLoginStateController(getReactApplicationContext())
+                    .addOnLoginStateChangedListener(this.mLoginStateChangedListener);
             SnapLogin.getAuthTokenManager(getReactApplicationContext()).startTokenGrant();
             promise.resolve("{\"result\": true}");
         } catch (Exception e) {
-            promise.resolve("{\"result\": false, \"error\": "+ e.toString() +"}");
+            promise.resolve("{\"result\": false, \"error\": " + e.toString() + "}");
         }
     }
 
@@ -68,7 +67,7 @@ public class SnapchatLoginModule extends ReactContextBaseJavaModule {
             SnapLogin.getAuthTokenManager(getReactApplicationContext()).revokeToken();
             promise.resolve("{\"result\": true}");
         } catch (Exception e) {
-            promise.resolve("{\"result\": false, \"error\": "+ e.toString() +"}");
+            promise.resolve("{\"result\": false, \"error\": " + e.toString() + "}");
         }
     }
 
@@ -81,7 +80,7 @@ public class SnapchatLoginModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void fetchUserData(final Promise promise) {
         String query = "{me{bitmoji{avatar},displayName,externalId}}";
-        if(SnapLogin.isUserLoggedIn(getReactApplicationContext())){
+        if (SnapLogin.isUserLoggedIn(getReactApplicationContext())) {
             SnapLogin.fetchUserData(getReactApplicationContext(), query, null, new FetchUserDataCallback() {
                 @Override
                 public void onSuccess(@Nullable UserDataResponse userDataResponse) {
@@ -95,12 +94,10 @@ public class SnapchatLoginModule extends ReactContextBaseJavaModule {
                         promise.resolve(null);
                         return;
                     }
-                    String output = "{"
-                            + "\"displayName\": \"" + meData.getDisplayName() + "\""
-                            + ", \"externalId\": \"" + meData.getExternalId() + "\""
-                            + ", \"avatar\": \"" + meData.getBitmojiData().getAvatar() + "\""
-                            + ", \"accessToken\": \""+ SnapLogin.getAuthTokenManager(getReactApplicationContext()).getAccessToken() + "\""
-                            + "}";
+                    String output = "{" + "\"displayName\": \"" + meData.getDisplayName() + "\""
+                            + ", \"externalId\": \"" + meData.getExternalId() + "\"" + ", \"bitmoji\": \""
+                            + meData.getBitmojiData().getAvatar() + "\"" + ", \"accessToken\": \""
+                            + SnapLogin.getAuthTokenManager(getReactApplicationContext()).getAccessToken() + "\"" + "}";
                     promise.resolve(output);
                 }
 

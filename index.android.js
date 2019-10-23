@@ -1,54 +1,60 @@
-import { NativeModules, NativeEventEmitter } from 'react-native';
-import { resolve } from 'uri-js';
+import { NativeModules, NativeEventEmitter } from 'react-native'
 
-export const RNSnapchatLogin = NativeModules.SnapchatLogin;
-export const RNSnapchatLoginEmitter = new NativeEventEmitter(RNSnapchatLogin);
+export const RNSnapchatLogin = NativeModules.SnapchatLogin
+export const RNSnapchatLoginEmitter = new NativeEventEmitter(RNSnapchatLogin)
 
-export default class SnapchatLogin {
-  static addListener(eventType, listener, context) {
-    return RNSnapchatLoginEmitter.addListener(eventType, listener, context);
+class SnapchatLogin {
+  addListener = (eventType, listener, context) => {
+    return RNSnapchatLoginEmitter.addListener(eventType, listener, context)
   }
 
-  static login() {
+  login = () => {
     return new Promise((resolve, reject) => {
-      const succeededListener = this.addListener('LoginSucceeded', (res) => {
-        succeededListener.remove();
-        failedListener.remove();
-        this.getUserInfo().then(resolve).catch(reject); 
-      });
-      const failedListener = this.addListener('LoginFailed', (res) => {
-        succeededListener.remove();
-        failedListener.remove();
-        resolve(false);
-      });
-      RNSnapchatLogin.login();
-    });
+      const succeededListener = this.addListener('LoginSucceeded', res => {
+        console.log('TCL: SnapchatLogin -> succeededListener -> res', res)
+        succeededListener.remove()
+        failedListener.remove()
+        this.getUserInfo()
+          .then(resolve)
+          .catch(reject)
+      })
+      const failedListener = this.addListener('LoginFailed', res => {
+        console.log('TCL: SnapchatLogin -> failedListener -> res', res)
+        succeededListener.remove()
+        failedListener.remove()
+        resolve(false)
+      })
+
+      RNSnapchatLogin.login()
+    })
   }
 
-  static async isLogged() {
-    const result = await RNSnapchatLogin.isUserLoggedIn();
-    const resultJSON = JSON.parse(result);
-    return !!resultJSON.result;
+  isLogged = async () => {
+    const result = await RNSnapchatLogin.isUserLoggedIn()
+    const resultJSON = JSON.parse(result)
+    return !!resultJSON.result
   }
 
-  static async logout() {
-    const result = await RNSnapchatLogin.logout();
-    const resultJSON = JSON.parse(result);
-    return !!resultJSON.result;
+  logout = async () => {
+    const result = await RNSnapchatLogin.logout()
+    const resultJSON = JSON.parse(result)
+    return !!resultJSON.result
   }
 
-  static getUserInfo() {
+  getUserInfo = () => {
     return new Promise((resolve, reject) => {
       RNSnapchatLogin.fetchUserData()
-        .then((tmp) => {
-          const data = JSON.parse(tmp);
+        .then(tmp => {
+          const data = JSON.parse(tmp)
           if (data === null) {
-            resolve(null);
+            resolve(null)
           } else {
-            resolve(data);
+            resolve(data)
           }
         })
-        .catch(e => reject(e));
-    });
+        .catch(e => reject(e))
+    })
   }
 }
+
+export default new SnapchatLogin()
