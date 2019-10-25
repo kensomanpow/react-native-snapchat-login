@@ -4,61 +4,51 @@ export const RNSnapchatLogin = NativeModules.SnapchatLogin
 export const RNSnapchatLoginEmitter = new NativeEventEmitter(RNSnapchatLogin)
 
 class SnapchatLogin {
-  constructor() {
-    this.login = this.login.bind(this)
-    this.isLogged = this.isLogged.bind(this)
-    this.logout = this.logout.bind(this)
-    this.getUserInfo = this.getUserInfo.bind(this)
+  login = async () => {
+    try {
+      const response = await RNSnapchatLogin.login()
+      if (!response.result) return `${response.error}`
+      const userData = await this.getUserInfo()
+      return userData
+    } catch (e) {
+      throw new Error(`${e}`)
+    }
   }
 
-  login() {
-    return new Promise((resolve, reject) => {
-      RNSnapchatLogin.login()
-        .then(result => {
-          if (result.error) {
-            reject(result.error)
-          } else {
-            this.getUserInfo()
-              .then(resolve)
-              .catch(reject)
-          }
-        })
-        .catch(e => reject(e))
-    })
+  isLogged = async () => {
+    try {
+      const { result } = await RNSnapchatLogin.isUserLoggedIn()
+      return result
+    } catch (e) {
+      throw new Error(`${e}`)
+    }
   }
 
-  async isLogged() {
-    const { result } = await RNSnapchatLogin.isUserLoggedIn()
-    return result
+  logout = async () => {
+    try {
+      const { result } = await RNSnapchatLogin.logout()
+      return result
+    } catch (e) {
+      throw new Error(`${e}`)
+    }
   }
 
-  async logout() {
-    const { result } = await RNSnapchatLogin.logout()
-    return result
-  }
+  getUserInfo = async () => {
+    try {
+      const responseUserData = await RNSnapchatLogin.fetchUserData()
+      if (!responseUserData) return null
 
-  getUserInfo() {
-    return new Promise((resolve, reject) => {
-      return RNSnapchatLogin.fetchUserData()
-        .then(async tmp => {
-          const data = tmp
-          if (data === null) {
-            resolve(null)
-          } else {
-            const { externalId } = await RNSnapchatLogin.getExternalId()
-            const { accessToken } = await RNSnapchatLogin.getAccessToken()
+      const { externalId } = await RNSnapchatLogin.getExternalId()
+      const { accessToken } = await RNSnapchatLogin.getAccessToken()
 
-            resolve({
-              ...data,
-              accessToken,
-              externalId,
-            })
-          }
-        })
-        .catch(e => {
-          reject(e)
-        })
-    })
+      return {
+        ...responseUserData,
+        externalId,
+        accessToken,
+      }
+    } catch (e) {
+      throw new Error(`${e}`)
+    }
   }
 }
 
