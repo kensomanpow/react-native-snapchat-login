@@ -4,26 +4,37 @@ export const RNSnapchatLogin = NativeModules.SnapchatLogin
 export const RNSnapchatLoginEmitter = new NativeEventEmitter(RNSnapchatLogin)
 
 class SnapchatLogin {
+  succeededListener = null
+
+  failedListener = null
+
   addListener = (eventType, listener, context) => {
     return RNSnapchatLoginEmitter.addListener(eventType, listener, context)
   }
 
-  login = () => {
-    return new Promise((resolve, reject) => {
-      const succeededListener = this.addListener('LoginSucceeded', res => {
-        succeededListener.remove()
-        failedListener.remove()
-        this.getUserInfo()
-          .then(resolve)
-          .catch(reject)
-      })
-      const failedListener = this.addListener('LoginFailed', res => {
-        succeededListener.remove()
-        failedListener.remove()
-        resolve(false)
+  removeListeners = () => {
+    this.succeededListener.remove()
+    this.failedListener.remove()
+  }
+
+  login = async () => {
+    await RNSnapchatLogin.login()
+
+    return new Promise(async (resolve, reject) => {
+      this.succeededListener = this.addListener('LoginSucceeded', async () => {
+        this.removeListeners()
+        const userData = await this.getUserInfo()
+        if (userData) {
+          resolve(userData)
+        } else {
+          reject(new Error('login error'))
+        }
       })
 
-      RNSnapchatLogin.login()
+      this.failedListener = this.addListener('LoginFailed', () => {
+        this.removeListeners()
+        resolve(false)
+      })
     })
   }
 
@@ -39,19 +50,14 @@ class SnapchatLogin {
     return !!resultJSON.result
   }
 
-  getUserInfo = () => {
-    return new Promise((resolve, reject) => {
-      RNSnapchatLogin.fetchUserData()
-        .then(tmp => {
-          const data = JSON.parse(tmp)
-          if (data === null) {
-            resolve(null)
-          } else {
-            resolve(data)
-          }
-        })
-        .catch(e => reject(e))
-    })
+  getUserInfo = async () => {
+    try {
+      const userData = await RNSnapchatLogin.fetchUserData()
+      if (!userData) return null
+      return userData
+    } catch (e) {
+      throw new Error(`${e}`)
+    }
   }
 }
 
