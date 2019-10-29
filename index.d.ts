@@ -8,9 +8,9 @@ declare module 'react-native-snapchat-login' {
   }
 
   export default class SnapchatLogin {
-    login(): Promise<SnapchatUserData | null>
-    getUserInfo(): Promise<SnapchatUserData | null>
-    isLogged(): Promise<boolean>
-    logout(): Promise<boolean>
+    static login(): Promise<SnapchatUserData | null>
+    static getUserInfo(): Promise<SnapchatUserData | null>
+    static isLogged(): Promise<boolean>
+    static logout(): Promise<boolean>
   }
 }
