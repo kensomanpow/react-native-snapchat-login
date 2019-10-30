@@ -40,11 +40,13 @@ class SnapchatLogin {
 
       const { externalId } = await RNSnapchatLogin.getExternalId()
       const { accessToken } = await RNSnapchatLogin.getAccessToken()
+      const bitmoji = responseUserData.bitmoji === 'null' ? undefined : responseUserData.bitmoji
 
       return {
         ...responseUserData,
         externalId,
         accessToken,
+        bitmoji,
       }
     } catch (e) {
       throw new Error(`${e}`)

@@ -54,7 +54,12 @@ class SnapchatLogin {
     try {
       const userData = await RNSnapchatLogin.fetchUserData()
       if (!userData) return null
-      return JSON.parse(userData)
+      const parsedUserData = JSON.parse(userData)
+      const bitmoji = parsedUserData.bitmoji === 'null' ? undefined : parsedUserData.bitmoji
+      return {
+        ...parsedUserData,
+        bitmoji,
+      }
     } catch (e) {
       throw new Error(`${e}`)
     }
