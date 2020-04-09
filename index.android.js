@@ -61,7 +61,7 @@ class SnapchatLogin {
         bitmoji,
       }
     } catch (e) {
-      throw new Error(`${e}`)
+      return null
     }
   }
 }
