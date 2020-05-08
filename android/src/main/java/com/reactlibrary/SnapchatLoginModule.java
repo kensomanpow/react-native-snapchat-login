@@ -64,7 +64,7 @@ public class SnapchatLoginModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void logout(final Promise promise) {
         try {
-            SnapLogin.getAuthTokenManager(getReactApplicationContext()).revokeToken();
+            SnapLogin.getAuthTokenManager(getReactApplicationContext()).clearToken();
             promise.resolve("{\"result\": true}");
         } catch (Exception e) {
             promise.resolve("{\"result\": false, \"error\": " + e.toString() + "}");
