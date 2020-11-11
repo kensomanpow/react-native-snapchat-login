@@ -19,6 +19,6 @@ Pod::Spec.new do |s|
   s.requires_arc = true
 
   s.dependency "React"
-  s.dependency "SnapSDK/SCSDKLoginKit", "1.4.4"
+  s.dependency "SnapSDK/SCSDKLoginKit", "1.6.8"
 end
 

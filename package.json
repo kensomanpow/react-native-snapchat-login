@@ -1,7 +1,7 @@
 {
-  "name": "react-native-snapchat-login",
+  "name": "react-native-snapchat-login-new",
   "title": "React Native Snapchat Login",
-  "version": "1.4.4",
+  "version": "1.6.8",
   "description": "react-native-snapchat-login",
   "main": "index",
   "scripts": {

@@ -51,7 +51,7 @@ repositories {
 }
 
 ext {
-    snapKitSdkVersion = '1.4.4'
+    snapKitSdkVersion = '1.6.8'
 }
 
 dependencies {
