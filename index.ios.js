@@ -4,12 +4,20 @@ export const RNSnapchatLogin = NativeModules.SnapchatLogin
 export const RNSnapchatLoginEmitter = new NativeEventEmitter(RNSnapchatLogin)
 
 class SnapchatLogin {
+  addListener = (eventType, listener, context) => {
+    // NO USE
+  }
+
+  removeListeners = () => {
+    // NO USE
+  }
+
+
   login = async () => {
     try {
       const response = await RNSnapchatLogin.login()
       if (!response.result) return `${response.error}`
-      const userData = await this.getUserInfo()
-      return userData
+      return true
     } catch (e) {
       throw new Error(`${e}`)
     }

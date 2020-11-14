@@ -13,8 +13,12 @@ class SnapchatLogin {
   }
 
   removeListeners = () => {
-    this.succeededListener.remove()
-    this.failedListener.remove()
+    if(this.succeededListener) {
+      this.succeededListener.remove()
+    }
+    if(this.failedListener) {
+      this.failedListener.remove()
+    }
   }
 
   login = async () => {
@@ -23,12 +27,7 @@ class SnapchatLogin {
     return new Promise(async (resolve, reject) => {
       this.succeededListener = this.addListener('LoginSucceeded', async () => {
         this.removeListeners()
-        const userData = await this.getUserInfo()
-        if (userData) {
-          resolve(userData)
-        } else {
-          reject(new Error('login error'))
-        }
+        resolve(true);
       })
 
       this.failedListener = this.addListener('LoginFailed', () => {

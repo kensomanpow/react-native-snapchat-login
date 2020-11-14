@@ -1,7 +1,7 @@
 {
   "name": "react-native-snapchat-login-new",
   "title": "React Native Snapchat Login",
-  "version": "1.6.7",
+  "version": "1.7.0",
   "description": "react-native-snapchat-login",
   "main": "index",
   "scripts": {
@@ -16,8 +16,8 @@
     "react-native"
   ],
   "author": {
-    "name": "Maximliano Duthey",
-    "email": "max@xoor.io"
+    "name": "Ken Chiang",
+    "email": "kensomanpow@gmail.com"
   },
   "license": "MIT",
   "licenseFilename": "LICENSE",

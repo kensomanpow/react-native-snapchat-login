@@ -12,5 +12,7 @@ declare module 'react-native-snapchat-login' {
     static getUserInfo(): Promise<SnapchatUserData | null>
     static isLogged(): Promise<boolean>
     static logout(): Promise<boolean>
+    static addListener(eventType, listener, context) 
+    static removeListeners()
   }
 }
